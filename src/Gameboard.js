@@ -1,28 +1,44 @@
 import React, { Component } from 'react';
 import Cell from './Cell.js'
+const colorchoices = ["red", "orange"]
 
 class Gameboard extends Component {
   constructor(props) {
-    super(props)
-    this.state = {
-      cell: 300,
+    super()
+    let numCells = 300
+    let cells = []
+    for (var i = 0; i < numCells; i++) {
+      cells.push({index: i, color: colorchoices[Math.floor(Math.random() * 2)]})
     }
+    this.state = {
+      cells
+    }
+  }
 
-  };
+  returnValues(cell) {
+    console.log(cell)
+  }
+
+  triggerColorChange(e) {
+    this.refs.child.colorChange(e)
+  }
 
   render() {
-    const cellGrid = [];
-
-    for (var i = 0; i < this.state.cell; i++) {
-      cellGrid.push(<Cell key={i} index={i}/>)
-    }
+    let cells = this.state.cells.map((cell) => {
+      return (
+        <Cell ref="child"
+              cell={cell}
+              returnValues={(cell) => this.returnValues(cell)}
+              key={cell.index}/>
+      )
+    })
 
 
     return (
       <div id="gameboard">
-        {cellGrid}
+        {cells}
       </div>
-    );
+    )
   }
 }
 
