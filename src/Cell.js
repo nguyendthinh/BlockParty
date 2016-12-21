@@ -5,7 +5,7 @@ class Cell extends Component {
 
   render() {
     return (
-      <div data-index={this.props.index}
+      <div id={this.props.cell.index}
             onClick={e => this.props.returnValues(this.props.cell)}
             className="cell"
             style={{backgroundColor: this.props.cell.color}}></div>

@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import Cell from './Cell.js'
+import Scoreboard from './Scoreboard.js'
 let _this = null;
 
 class Gameboard extends Component {
   constructor(props) {
     super(props)
-    let numCells = 300
+    let numCells = 150
     let cellGrid = []
     for (var i = 0; i < numCells; i++) {
       cellGrid.push({index: i, color: this.props.firstFiveColor[Math.floor(Math.random() * this.props.firstFiveColor.length)]})
@@ -21,8 +22,8 @@ class Gameboard extends Component {
     var clickedIndex = cell.index
     let cellGrid = this.state.cellGrid;
     let nextCell = _this.state.cellGrid;
-    var blockBelow = cellGrid[clickedIndex + 20]
-    var blockAbove = cellGrid[clickedIndex - 20]
+    var blockBelow = cellGrid[clickedIndex + 15]
+    var blockAbove = cellGrid[clickedIndex - 15]
     var blockRight = cellGrid[clickedIndex + 1]
     var blockLeft = cellGrid[clickedIndex - 1]
     var lightUp = document.getElementsByClassName("cell")
@@ -31,7 +32,10 @@ class Gameboard extends Component {
       var blockColor = block.color
       block.color = clickedColor
       lightUp[index].classList.add("active")
-      for (var i = (index + 20); i <= 300; i += 20) {
+      for (var i = (index + 15); i <= 300; i += 15) {
+        if (nextCell[i] === undefined) {
+          return;
+        }
         if (nextCell[i].color === blockColor) {
           nextCell[i].color = clickedColor
           setTimeout(lightUp[i].classList.add("active"), 500);
@@ -45,7 +49,10 @@ class Gameboard extends Component {
       var blockColor = block.color
       block.color = clickedColor
       lightUp[index].classList.add("active")
-      for (var i = (index - 20); i >= 0; i -= 20) {
+      for (var i = (index - 15); i >= 0; i -= 15) {
+        if (nextCell[i] === undefined) {
+          return;
+        }
         if (nextCell[i].color === blockColor) {
           nextCell[i].color = clickedColor
           setTimeout(lightUp[i].classList.add("active"), 500);
@@ -60,7 +67,10 @@ class Gameboard extends Component {
       block.color = clickedColor
       lightUp[index].classList.add("active")
       for (var i = (index + 1); i <= 300; i += 1) {
-        if (nextCell[i].color === blockColor && i % 20 !==0) {
+        if (nextCell[i] === undefined) {
+          return;
+        }
+        if (nextCell[i].color === blockColor && i % 15 !== 0) {
           nextCell[i].color = clickedColor
           setTimeout(lightUp[i].classList.add("active"), 500);
         } else {
@@ -74,7 +84,10 @@ class Gameboard extends Component {
       block.color = clickedColor
       lightUp[index].classList.add("active")
       for (var i = (index - 1); i >= 0; i -= 1) {
-        if (nextCell[i].color === blockColor && i % 20 !== 19) {
+        if (nextCell[i] === undefined) {
+          return;
+        }
+        if (nextCell[i].color === blockColor && i % 15 !== 14) {
           nextCell[i].color = clickedColor
           setTimeout(lightUp[i].classList.add("active"), 500);
         } else {
@@ -83,7 +96,7 @@ class Gameboard extends Component {
       }
     }
     //////
-    if (blockBelow !== undefined && blockBelow.index <= 299) {
+    if (blockBelow !== undefined && blockBelow.index <= 149) {
       checkBelow(blockBelow, blockBelow.index)
     }
 
@@ -91,11 +104,11 @@ class Gameboard extends Component {
       checkAbove(blockAbove, blockAbove.index)
     }
 
-    if (blockRight !== undefined && blockRight.index % 20 !== 0) {
+    if (blockRight !== undefined && blockRight.index % 15 !== 0) {
       checkRight(blockRight, blockRight.index)
     }
 
-    if (blockLeft !==undefined && blockLeft.index % 20 !== 19) {
+    if (blockLeft !==undefined && blockLeft.index % 15 !== 14) {
     checkLeft(blockLeft, blockLeft.index)
     }
     //////
@@ -108,7 +121,7 @@ class Gameboard extends Component {
       for (var i = 0; i < array.length; i++) {
         document.getElementsByClassName("cell")[i].classList.remove("active")
       }
-      document.getElementById("gameboard").style.backgroundColor = "transparent"
+      // document.getElementById("gameboard").style.backgroundColor = "transparent"
 
       function chooseRandomColor() {
           var letters = '0123456789ABCDEF';
@@ -133,6 +146,27 @@ class Gameboard extends Component {
     /////
   }
 
+  beginGame(e) {
+    let cellGrid = this.state.cellGrid
+    let firstFourColor = []
+    function chooseRandomColor() {
+        var letters = '0123456789ABCDEF';
+        var color = '#';
+        for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * letters.length)];
+      } return color;
+    }
+    for (var i = 0; i < 3; i++) {
+      firstFourColor.push(chooseRandomColor())
+    }
+    for (var i = 0; i < cellGrid.length; i++) {
+      cellGrid[i].color = firstFourColor[Math.floor(Math.random() * this.props.firstFiveColor.length)]
+    }
+    this.setState({
+      cellGrid
+    })
+  }
+
   render() {
     let cellGrid = this.state.cellGrid.map((cell) => {
       return (
@@ -146,7 +180,7 @@ class Gameboard extends Component {
     return (
       <div id="gameboard">
       {cellGrid}
-      <div id="win">"YOU WIN"</div>
+      <Scoreboard beginGame={e => this.beginGame(e)}/>
       </div>
     )
   }

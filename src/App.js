@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 import Gameboard from './Gameboard.js';
+import Scoreboard from './Scoreboard.js';
+let firstFiveColor = [];
 
 class App extends Component {
   constructor(props){
     super()
-    let firstFiveColor = []
+    this.state = {
+      firstFiveColor,
+    }
     function chooseRandomColor() {
         var letters = '0123456789ABCDEF';
         var color = '#';
@@ -12,12 +16,8 @@ class App extends Component {
         color += letters[Math.floor(Math.random() * letters.length)];
       } return color;
     }
-    for (var i = 0; i < 5; i++) {
+    for (var i = 0; i < 3; i++) {
       firstFiveColor.push(chooseRandomColor())
-    }
-
-    this.state = {
-      firstFiveColor
     }
   }
 
