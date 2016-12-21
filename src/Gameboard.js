@@ -1,22 +1,14 @@
 import React, { Component } from 'react';
 import Cell from './Cell.js'
 let _this = null;
-const randomColors = ["red", "orange", "yellow", "green", "blue", "purple", "pink", "brown", "white", "gray"]
-// function getRandomColor() {
-//                     var letters = '0123456789ABCDEF';
-//                     var color = '#';
-//                     for (var i = 0; i < 6; i++) {
-//                     color += letters[Math.floor(Math.random() * letters.length)];
-//                      } return color;
-//                   }
 
 class Gameboard extends Component {
   constructor(props) {
-    super()
+    super(props)
     let numCells = 300
     let cellGrid = []
     for (var i = 0; i < numCells; i++) {
-      cellGrid.push({index: i, color: randomColors[Math.floor(Math.random() * randomColors.length)]})
+      cellGrid.push({index: i, color: this.props.firstFiveColor[Math.floor(Math.random() * this.props.firstFiveColor.length)]})
     }
     this.state = {
       cellGrid
@@ -33,55 +25,64 @@ class Gameboard extends Component {
     var blockAbove = cellGrid[clickedIndex - 20]
     var blockRight = cellGrid[clickedIndex + 1]
     var blockLeft = cellGrid[clickedIndex - 1]
-
+    var lightUp = document.getElementsByClassName("cell")
+    //////
     function checkBelow(block, index) {
       var blockColor = block.color
       block.color = clickedColor
+      lightUp[index].classList.add("active")
       for (var i = (index + 20); i <= 300; i += 20) {
         if (nextCell[i].color === blockColor) {
           nextCell[i].color = clickedColor
+          setTimeout(lightUp[i].classList.add("active"), 500);
         } else {
           return;
         }
       }
     }
-
+    //////
     function checkAbove(block, index) {
       var blockColor = block.color
       block.color = clickedColor
+      lightUp[index].classList.add("active")
       for (var i = (index - 20); i >= 0; i -= 20) {
         if (nextCell[i].color === blockColor) {
           nextCell[i].color = clickedColor
+          setTimeout(lightUp[i].classList.add("active"), 500);
         } else {
           return;
         }
       }
     }
-
+    //////
     function checkRight(block, index) {
       var blockColor = block.color
       block.color = clickedColor
+      lightUp[index].classList.add("active")
       for (var i = (index + 1); i <= 300; i += 1) {
         if (nextCell[i].color === blockColor && i % 20 !==0) {
           nextCell[i].color = clickedColor
+          setTimeout(lightUp[i].classList.add("active"), 500);
         } else {
           return;
         }
       }
     }
-
+    //////
     function checkLeft(block, index) {
       var blockColor = block.color
       block.color = clickedColor
+      lightUp[index].classList.add("active")
       for (var i = (index - 1); i >= 0; i -= 1) {
         if (nextCell[i].color === blockColor && i % 20 !== 19) {
           nextCell[i].color = clickedColor
+          setTimeout(lightUp[i].classList.add("active"), 500);
         } else {
           return;
         }
       }
     }
-
+    //////
     if (blockBelow !== undefined && blockBelow.index <= 299) {
       checkBelow(blockBelow, blockBelow.index)
     }
@@ -97,22 +98,39 @@ class Gameboard extends Component {
     if (blockLeft !==undefined && blockLeft.index % 20 !== 19) {
     checkLeft(blockLeft, blockLeft.index)
     }
-
+    //////
     function checkColors(array) {
       for (var i = 1; i < array.length; i++) {
         if (array[i].color !== array[0].color) {
           return;
         }
       }
-      console.log("you won!");
-    }
+      for (var i = 0; i < array.length; i++) {
+        document.getElementsByClassName("cell")[i].classList.remove("active")
+      }
+      document.getElementById("gameboard").style.backgroundColor = "transparent"
 
+      function chooseRandomColor() {
+          var letters = '0123456789ABCDEF';
+          var color = '#';
+          for (var i = 0; i < 6; i++) {
+          color += letters[Math.floor(Math.random() * letters.length)];
+        } return color;
+      }
+
+      setInterval(function(){
+        for (var i = 0; i < array.length; i++) {
+          document.getElementsByClassName("cell")[i].style.backgroundColor = chooseRandomColor()
+        }
+      }, 100)
+    }
+    //////
     this.setState({
       cellGrid
     })
-
+    /////
     checkColors(this.state.cellGrid)
-
+    /////
   }
 
   render() {
@@ -128,6 +146,7 @@ class Gameboard extends Component {
     return (
       <div id="gameboard">
       {cellGrid}
+      <div id="win">"YOU WIN"</div>
       </div>
     )
   }
