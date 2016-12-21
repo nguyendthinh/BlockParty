@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import Cell from './Cell.js'
-// const colorchoices = ["red", "orange"]
 let _this = null;
-function getRandomColor() {
-                    var letters = '0123456789ABCDEF';
-                    var color = '#';
-                    for (var i = 0; i < 6; i++) {
-                    color += letters[Math.floor(Math.random() * letters.length)];
-                     } return color;
-                  }
+const randomColors = ["red", "orange", "yellow", "green", "blue", "purple", "pink", "brown", "white", "gray"]
+// function getRandomColor() {
+//                     var letters = '0123456789ABCDEF';
+//                     var color = '#';
+//                     for (var i = 0; i < 6; i++) {
+//                     color += letters[Math.floor(Math.random() * letters.length)];
+//                      } return color;
+//                   }
 
 class Gameboard extends Component {
   constructor(props) {
@@ -16,7 +16,7 @@ class Gameboard extends Component {
     let numCells = 300
     let cellGrid = []
     for (var i = 0; i < numCells; i++) {
-      cellGrid.push({index: i, color: getRandomColor()})
+      cellGrid.push({index: i, color: randomColors[Math.floor(Math.random() * randomColors.length)]})
     }
     this.state = {
       cellGrid
@@ -35,9 +35,6 @@ class Gameboard extends Component {
     var blockLeft = cellGrid[clickedIndex - 1]
 
     function checkBelow(block, index) {
-      if (index > 299) {
-        return;
-      }
       var blockColor = block.color
       block.color = clickedColor
       for (var i = (index + 20); i <= 300; i += 20) {
@@ -50,9 +47,6 @@ class Gameboard extends Component {
     }
 
     function checkAbove(block, index) {
-      if (index < 0) {
-        return;
-      }
       var blockColor = block.color
       block.color = clickedColor
       for (var i = (index - 20); i >= 0; i -= 20) {
@@ -65,9 +59,6 @@ class Gameboard extends Component {
     }
 
     function checkRight(block, index) {
-      if (index % 20 === 0) {
-        return;
-      }
       var blockColor = block.color
       block.color = clickedColor
       for (var i = (index + 1); i <= 300; i += 1) {
@@ -80,9 +71,6 @@ class Gameboard extends Component {
     }
 
     function checkLeft(block, index) {
-      if (index % 20 === 19) {
-        return;
-      }
       var blockColor = block.color
       block.color = clickedColor
       for (var i = (index - 1); i >= 0; i -= 1) {
@@ -94,22 +82,38 @@ class Gameboard extends Component {
       }
     }
 
-    if (blockBelow !== undefined) {
+    if (blockBelow !== undefined && blockBelow.index <= 299) {
       checkBelow(blockBelow, blockBelow.index)
     }
 
-    if (blockAbove !== undefined) {
+    if (blockAbove !== undefined && blockAbove.index > 0) {
       checkAbove(blockAbove, blockAbove.index)
     }
-    checkRight(blockRight, blockRight.index)
+
+    if (blockRight !== undefined && blockRight.index % 20 !== 0) {
+      checkRight(blockRight, blockRight.index)
+    }
+
+    if (blockLeft !==undefined && blockLeft.index % 20 !== 19) {
     checkLeft(blockLeft, blockLeft.index)
+    }
+
+    function checkColors(array) {
+      for (var i = 1; i < array.length; i++) {
+        if (array[i].color !== array[0].color) {
+          return;
+        }
+      }
+      console.log("you won!");
+    }
 
     this.setState({
       cellGrid
     })
 
-  }
+    checkColors(this.state.cellGrid)
 
+  }
 
   render() {
     let cellGrid = this.state.cellGrid.map((cell) => {
