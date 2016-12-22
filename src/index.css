@@ -16,7 +16,7 @@ body {
   transition: all 1s ease-in;
 }
 
-#gameboard {
+#grid{
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -40,7 +40,7 @@ body {
   display: none;
 }
 
-#gamebegin {
+#Scoreboard {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -48,6 +48,24 @@ body {
   text-align: center;
   color: white;
   width: 20vw;
+}
+
+#gameboard{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+#current {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#winmessage {
+  display: none;
 }
 
 

@@ -21,13 +21,17 @@ class Gameboard extends Component {
     this.state = {
       cellGrid,
       clicks: 0,
-      timer: 0,
+      timer: 20,
       timerID: "",
+      startGame: false
     }
     _this = this
   }
 
   userClicks(cell) {
+    if (_this.state.startGame === false) {
+      return;
+    }
     var clickedColor = cell.color
     var clickedIndex = cell.index
     let cellGrid = this.state.cellGrid;
@@ -128,6 +132,8 @@ class Gameboard extends Component {
           return;
         }
       }
+      document.getElementById("current").style.display = "none"
+      document.getElementById("winmessage").style.display = "block"
       for (var i = 0; i < array.length; i++) {
         document.getElementsByClassName("cell")[i].classList.remove("active")
       }
@@ -144,11 +150,10 @@ class Gameboard extends Component {
       cellGrid
     })
     /////
-    checkColors(this.state.cellGrid)
+    checkColors(_this.state.cellGrid)
     this.setState({
       clicks: this.state.clicks + 1
     })
-    console.log(this.state.clicks)
     /////
   }
 
@@ -165,20 +170,46 @@ class Gameboard extends Component {
     this.setState({
       cellGrid,
       clicks: 0,
-      timer: 0,
-      timerID: clearInterval(this.state.timerID)
+      timer: 20,
+      timerID: clearInterval(this.state.timerID),
+      startGame: false
     })
   }
 
   beginGame(e) {
     let _this = this
+
     let timerID = setInterval(() => {
-      _this.setState({
-        timer: _this.state.timer + 1,
-        timerID: timerID
-      })
-    }, 2000)
-    console.log(this.state.timer)
+      if (_this.state.timer !== 0) {
+        _this.setState({
+          timer: _this.state.timer - 1,
+          timerID: timerID,
+          startGame: true
+        })
+      } else {
+        changeRandomBlock(_this)
+          _this.setState({
+            timer: 20,
+            timerID: timerID
+          })
+      }
+    }, 1000)
+
+
+    // let timerID = setInterval(() => {
+    //   _this.setState({
+    //     timer: _this.state.timer - 1,
+    //     timerID: timerID,
+    //     startGame: true
+    //   })
+    // }, 1000)
+
+    function changeRandomBlock(_this) {
+      for (var i = 0; i < 10; i++) {
+        _this.state.cellGrid[Math.floor(Math.random() * _this.state.cellGrid.length)].color = chooseRandomColor()
+      }
+    }
+
   }
 
   render() {
@@ -193,7 +224,9 @@ class Gameboard extends Component {
 
     return (
       <div id="gameboard">
+      <div id="grid">
       {cellGrid}
+      </div>
       <Scoreboard clicks={this.state.clicks} timer={this.state.timer} beginGame={e => this.beginGame(e)} newColor={e => this.newColor(e)}/>
       </div>
     )
