@@ -13,7 +13,7 @@ body {
 }
 
 .cell.active {
-  transition: all 1s ease-in;
+  transition: all 1s ease-in-out;
 }
 
 #grid{
@@ -66,8 +66,29 @@ body {
 
 #winmessage {
   display: none;
+  width: 10em;
 }
 
+button {
+  background-color: white;
+  border: none;
+  font-family: Arial;
+  height: 4em;
+  font-weight: bold;
+  margin-bottom: 20px;
+  width: 15em;
+}
+
+#timer, #win {
+  font-family: Arial;
+  font-size: 4em;
+  display: inline;
+}
+
+#score {
+  font-family: Arial;
+  font-size: 1.5em;
+}
 
 @keyframes slide {
     0%  {

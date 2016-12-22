@@ -21,7 +21,7 @@ class Gameboard extends Component {
     this.state = {
       cellGrid,
       clicks: 0,
-      timer: 20,
+      timer: 10,
       timerID: "",
       startGame: false
     }
@@ -127,6 +127,7 @@ class Gameboard extends Component {
     }
     //////
     function checkColors(array) {
+      let _this = this
       for (var i = 1; i < array.length; i++) {
         if (array[i].color !== array[0].color) {
           return;
@@ -137,23 +138,20 @@ class Gameboard extends Component {
       for (var i = 0; i < array.length; i++) {
         document.getElementsByClassName("cell")[i].classList.remove("active")
       }
-      // document.getElementById("gameboard").style.backgroundColor = "transparent"
 
       setInterval(function(){
         for (var i = 0; i < array.length; i++) {
           document.getElementsByClassName("cell")[i].style.backgroundColor = chooseRandomColor()
         }
       }, 100)
+
     }
     //////
     this.setState({
-      cellGrid
-    })
-    /////
-    checkColors(_this.state.cellGrid)
-    this.setState({
+      cellGrid,
       clicks: this.state.clicks + 1
     })
+    checkColors(_this.state.cellGrid)
     /////
   }
 
@@ -170,7 +168,7 @@ class Gameboard extends Component {
     this.setState({
       cellGrid,
       clicks: 0,
-      timer: 20,
+      timer: 10,
       timerID: clearInterval(this.state.timerID),
       startGame: false
     })
@@ -189,7 +187,7 @@ class Gameboard extends Component {
       } else {
         changeRandomBlock(_this)
           _this.setState({
-            timer: 20,
+            timer: 10,
             timerID: timerID
           })
       }
