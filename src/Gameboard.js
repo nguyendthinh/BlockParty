@@ -2,6 +2,13 @@ import React, { Component } from 'react';
 import Cell from './Cell.js'
 import Scoreboard from './Scoreboard.js'
 let _this = null;
+function chooseRandomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * letters.length)];
+  } return color;
+}
 
 class Gameboard extends Component {
   constructor(props) {
@@ -12,12 +19,15 @@ class Gameboard extends Component {
       cellGrid.push({index: i, color: this.props.firstFiveColor[Math.floor(Math.random() * this.props.firstFiveColor.length)]})
     }
     this.state = {
-      cellGrid
+      cellGrid,
+      clicks: 0,
+      timer: 0,
+      timerID: "",
     }
     _this = this
   }
 
-  returnValues(cell) {
+  userClicks(cell) {
     var clickedColor = cell.color
     var clickedIndex = cell.index
     let cellGrid = this.state.cellGrid;
@@ -109,7 +119,7 @@ class Gameboard extends Component {
     }
 
     if (blockLeft !==undefined && blockLeft.index % 15 !== 14) {
-    checkLeft(blockLeft, blockLeft.index)
+      checkLeft(blockLeft, blockLeft.index)
     }
     //////
     function checkColors(array) {
@@ -123,14 +133,6 @@ class Gameboard extends Component {
       }
       // document.getElementById("gameboard").style.backgroundColor = "transparent"
 
-      function chooseRandomColor() {
-          var letters = '0123456789ABCDEF';
-          var color = '#';
-          for (var i = 0; i < 6; i++) {
-          color += letters[Math.floor(Math.random() * letters.length)];
-        } return color;
-      }
-
       setInterval(function(){
         for (var i = 0; i < array.length; i++) {
           document.getElementsByClassName("cell")[i].style.backgroundColor = chooseRandomColor()
@@ -143,28 +145,40 @@ class Gameboard extends Component {
     })
     /////
     checkColors(this.state.cellGrid)
+    this.setState({
+      clicks: this.state.clicks + 1
+    })
+    console.log(this.state.clicks)
     /////
   }
 
-  beginGame(e) {
+  newColor(e) {
     let cellGrid = this.state.cellGrid
     let firstFourColor = []
-    function chooseRandomColor() {
-        var letters = '0123456789ABCDEF';
-        var color = '#';
-        for (var i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * letters.length)];
-      } return color;
-    }
     for (var i = 0; i < 3; i++) {
       firstFourColor.push(chooseRandomColor())
     }
     for (var i = 0; i < cellGrid.length; i++) {
       cellGrid[i].color = firstFourColor[Math.floor(Math.random() * this.props.firstFiveColor.length)]
+      document.getElementsByClassName("cell")[i].classList.add("active")
     }
     this.setState({
-      cellGrid
+      cellGrid,
+      clicks: 0,
+      timer: 0,
+      timerID: clearInterval(this.state.timerID)
     })
+  }
+
+  beginGame(e) {
+    let _this = this
+    let timerID = setInterval(() => {
+      _this.setState({
+        timer: _this.state.timer + 1,
+        timerID: timerID
+      })
+    }, 2000)
+    console.log(this.state.timer)
   }
 
   render() {
@@ -172,7 +186,7 @@ class Gameboard extends Component {
       return (
         <Cell ref="child"
         cell={cell}
-        returnValues={(cell) => this.returnValues(cell)}
+        userClicks={(cell) => this.userClicks(cell)}
         key={cell.index}/>
       )
     })
@@ -180,7 +194,7 @@ class Gameboard extends Component {
     return (
       <div id="gameboard">
       {cellGrid}
-      <Scoreboard beginGame={e => this.beginGame(e)}/>
+      <Scoreboard clicks={this.state.clicks} timer={this.state.timer} beginGame={e => this.beginGame(e)} newColor={e => this.newColor(e)}/>
       </div>
     )
   }
