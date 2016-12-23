@@ -12,7 +12,8 @@ class Scoreboard extends Component {
         </div>
         <div id="winmessage">
           <p id="win">YOU WIN!</p>
-          <p id="score">YOUR SCORE: {Math.floor((1000/this.props.clicks) * 10)}</p>
+          <p id="score">SCORE: {Math.floor((1000/this.props.clicks) * 10)}</p>
+          <button onClick={e => this.props.restart(e)}>START NEW GAME</button>
         </div>
       </div>
     );

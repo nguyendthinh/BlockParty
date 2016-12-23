@@ -19,6 +19,9 @@ class App extends Component {
     let firstFiveColor = this.state.firstFiveColor
     return (
       <div className="App">
+      <div id="titlebackground">
+        <h1 id="title">BLOCK PARTY</h1>
+      </div>
         <Gameboard firstFiveColor={firstFiveColor} />
       </div>
     );

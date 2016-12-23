@@ -21,7 +21,7 @@ class Gameboard extends Component {
     this.state = {
       cellGrid,
       clicks: 0,
-      timer: 10,
+      timer: 12,
       timerID: "",
       startGame: false
     }
@@ -29,7 +29,7 @@ class Gameboard extends Component {
   }
 
   userClicks(cell) {
-    if (_this.state.startGame === false) {
+    if (_this.state.startGame === false || _this.state.cellGrid[0].color === "white") {
       return;
     }
     var clickedColor = cell.color
@@ -134,7 +134,7 @@ class Gameboard extends Component {
         }
       }
       document.getElementById("current").style.display = "none"
-      document.getElementById("winmessage").style.display = "block"
+      document.getElementById("winmessage").style.display = "flex"
       for (var i = 0; i < array.length; i++) {
         document.getElementsByClassName("cell")[i].classList.remove("active")
       }
@@ -168,7 +168,7 @@ class Gameboard extends Component {
     this.setState({
       cellGrid,
       clicks: 0,
-      timer: 10,
+      timer: 12,
       timerID: clearInterval(this.state.timerID),
       startGame: false
     })
@@ -187,27 +187,22 @@ class Gameboard extends Component {
       } else {
         changeRandomBlock(_this)
           _this.setState({
-            timer: 10,
+            timer: 12,
             timerID: timerID
           })
       }
     }, 1000)
 
-
-    // let timerID = setInterval(() => {
-    //   _this.setState({
-    //     timer: _this.state.timer - 1,
-    //     timerID: timerID,
-    //     startGame: true
-    //   })
-    // }, 1000)
-
     function changeRandomBlock(_this) {
-      for (var i = 0; i < 10; i++) {
-        _this.state.cellGrid[Math.floor(Math.random() * _this.state.cellGrid.length)].color = chooseRandomColor()
+      for (var i = 0; i < 20; i++) {
+        _this.state.cellGrid[Math.floor(Math.random() * _this.state.cellGrid.length)].color = "black"
       }
     }
 
+  }
+
+  restart(e) {
+    window.location.reload(true);
   }
 
   render() {
@@ -225,7 +220,7 @@ class Gameboard extends Component {
       <div id="grid">
       {cellGrid}
       </div>
-      <Scoreboard clicks={this.state.clicks} timer={this.state.timer} beginGame={e => this.beginGame(e)} newColor={e => this.newColor(e)}/>
+      <Scoreboard restart={e => this.restart(e)} clicks={this.state.clicks} timer={this.state.timer} beginGame={e => this.beginGame(e)} newColor={e => this.newColor(e)}/>
       </div>
     )
   }
