@@ -21,7 +21,7 @@ class Gameboard extends Component {
     this.state = {
       cellGrid,
       clicks: 0,
-      timer: 12,
+      timer: 20,
       timerID: "",
       startGame: false
     }
@@ -133,8 +133,10 @@ class Gameboard extends Component {
           return;
         }
       }
-      document.getElementById("current").style.display = "none"
-      document.getElementById("winmessage").style.display = "flex"
+      document.getElementsByClassName("current")[0].style.display = "none"
+      document.getElementsByClassName("current")[1].style.display = "none"
+      document.getElementsByClassName("winmessage")[0].style.display = "flex"
+      document.getElementsByClassName("winmessage")[1].style.display = "flex"
       for (var i = 0; i < array.length; i++) {
         document.getElementsByClassName("cell")[i].classList.remove("active")
       }
@@ -168,7 +170,7 @@ class Gameboard extends Component {
     this.setState({
       cellGrid,
       clicks: 0,
-      timer: 12,
+      timer: 20,
       timerID: clearInterval(this.state.timerID),
       startGame: false
     })
@@ -187,15 +189,17 @@ class Gameboard extends Component {
       } else {
         changeRandomBlock(_this)
           _this.setState({
-            timer: 12,
+            timer: 20,
             timerID: timerID
           })
       }
     }, 1000)
 
     function changeRandomBlock(_this) {
-      for (var i = 0; i < 20; i++) {
-        _this.state.cellGrid[Math.floor(Math.random() * _this.state.cellGrid.length)].color = "black"
+      let color = chooseRandomColor()
+
+      for (var i = 0; i < 15; i++) {
+        _this.state.cellGrid[Math.floor(Math.random() * _this.state.cellGrid.length)].color = color
       }
     }
 
@@ -217,10 +221,15 @@ class Gameboard extends Component {
 
     return (
       <div id="gameboard">
-      <div id="grid">
-      {cellGrid}
-      </div>
-      <Scoreboard restart={e => this.restart(e)} clicks={this.state.clicks} timer={this.state.timer} beginGame={e => this.beginGame(e)} newColor={e => this.newColor(e)}/>
+        <div className="current" id="timer">{this.state.timer}</div>
+          <div className="winmessage">
+            <p id="win">YOU WIN!</p>
+            <p id="score">SCORE: {Math.floor((1000/this.state.clicks) * 10)}</p>
+          </div>
+          <div id="grid">
+            {cellGrid}
+          </div>
+        <Scoreboard restart={e => this.restart(e)} clicks={this.state.clicks} timer={this.state.timer} beginGame={e => this.beginGame(e)} newColor={e => this.newColor(e)}/>
       </div>
     )
   }
