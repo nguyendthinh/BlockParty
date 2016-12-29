@@ -15,11 +15,11 @@ body {
 
 @font-face {
   font-family: gameBlock;
-  src: url("../public/porter-sans-inline-block.ttf");
+  src: url("/porter-sans-inline-block.ttf");
 }
 
 #title {
-  font-family: gameBlock;
+  font-family: gameBlock, 'Kumar One';
   color: white;
   font-size: 4em;
   animation: neon5 1.5s ease-in-out infinite alternate;
