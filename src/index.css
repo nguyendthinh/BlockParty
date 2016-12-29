@@ -15,7 +15,7 @@ body {
 
 @font-face {
   font-family: gameBlock;
-  src: url("/porter-sans-inline-block.ttf");
+  src: url("../public/porter-sans-inline-block.ttf");
 }
 
 #title {
